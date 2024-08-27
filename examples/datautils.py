@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 
-class MyTrainDataset(Dataset):
+class TrainDataset(Dataset):
     """
     Helper class to generate random data for training.
 

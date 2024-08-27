@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
-from datautils import MyTrainDataset
+from datautils import TrainDataset
 
 
 class Trainer:
@@ -11,7 +11,7 @@ class Trainer:
         train_data: DataLoader,
         optimizer: torch.optim.Optimizer,
         gpu_id: int,
-        save_every: int, 
+        save_every: int,
     ) -> None:
         self.gpu_id = gpu_id
         self.model = model.to(gpu_id)
@@ -48,7 +48,7 @@ class Trainer:
 
 
 def load_train_objs():
-    train_set = MyTrainDataset(2048)  # load your dataset
+    train_set = TrainDataset(2048)  # load your dataset
     model = torch.nn.Linear(20, 1)  # load your model
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
     return train_set, model, optimizer
@@ -78,7 +78,6 @@ if __name__ == "__main__":
     parser.add_argument('--batch_size', default=32, type=int, help='Input batch size on each device (default: 32)')
     args = parser.parse_args()
 
-    # print GPU availability
     print(f"GPU DETAILS:")
     print(torch.cuda.is_available())
     print(torch.cuda.device_count())

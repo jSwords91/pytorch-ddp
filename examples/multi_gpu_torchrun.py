@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
-from datautils import MyTrainDataset
+from datautils import TrainDataset
 
 import torch.multiprocessing as mp
 from torch.utils.data.distributed import DistributedSampler
@@ -75,7 +75,7 @@ class Trainer:
 
 
 def load_train_objs():
-    train_set = MyTrainDataset(2048)  # load your dataset
+    train_set = TrainDataset(2048)  # load your dataset
     model = torch.nn.Linear(20, 1)  # load your model
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
     return train_set, model, optimizer
