@@ -1,3 +1,6 @@
 torch>=1.11.0
 pandas
 scikit-learn==1.5.1
+matplotlib
+tensorboard==1.16.0
+torch-tb-profiler

@@ -5,6 +5,7 @@ from torch.utils.data import Dataset, DataLoader, random_split
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from dataclasses import dataclass
+from typing import Any, Dict, OrderedDict
 
 @dataclass
 class DataConfig:
@@ -19,6 +20,12 @@ class TrainingConfig:
     total_epochs: int = 10
     save_every: int = 5
     batch_size: int = 256
+
+@dataclass
+class Snapshot:
+    model_state: OrderedDict[str, torch.Tensor]
+    optimizer_state: Dict[str, Any]
+    finished_epoch: int
 
 
 class MovieRatingsDataset(Dataset):
@@ -98,13 +105,11 @@ class Trainer:
         return val_loss / len(self.val_data)
 
     def _save_checkpoint(self, epoch: int):
-        checkpoint = {
-            'epoch': epoch,
-            'model_state_dict': self.model.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'train_loss': self.train_loss,
-            'val_loss': self.val_loss
-        }
+        checkpoint = Snapshot(
+            model_state=self.model.state_dict(),
+            optimizer_state=self.optimizer.state_dict(),
+            finished_epoch=epoch
+        )
         PATH = f"./checkpoints/checkpoint_epoch_{epoch}.pt"
         torch.save(checkpoint, PATH)
         print(f"Epoch {epoch} | Training checkpoint saved at {PATH}")
@@ -177,6 +182,12 @@ def show_device_details() -> None:
     print("Current CUDA device: ", torch.cuda.current_device())
     print("CUDA device name: ", torch.cuda.get_device_name(torch.cuda.current_device()))
 
+def set_device():
+    if torch.cuda.is_available():
+        show_device_details()
+        return torch.device(f"cuda:{torch.cuda.current_device()}")
+    else:
+        return torch.device("cpu")
 
 def main(device: int, training_config: TrainingConfig, data_config: DataConfig):
     dataset, model, optimizer = load_train_objs(data_config)
@@ -192,10 +203,7 @@ if __name__ == "__main__":
     parser.add_argument('--batch_size', type=int, help='Input batch size on each device')
     args = parser.parse_args()
 
-    if torch.cuda.is_available():
-        show_device_details()
-
-    device = 0  # shorthand for cuda:0
+    device = set_device()
     data_config = DataConfig()
     training_config = TrainingConfig()
 

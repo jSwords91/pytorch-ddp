@@ -1,24 +1,52 @@
-## **PyTorch Distributed Training**
+# PyTorch Distributed Data Parallel (DDP)
+
+This repository provides a step-by-step guide and examples for implementing distributed training in PyTorch, ranging from single GPU setups to multi-node clusters. The goal is to demonstrate the progression from simple to complex distributed training scenarios.
+
+## Contents
+
+1. **Single GPU Training**
+   - Basic PyTorch training on a single GPU
+   - Demonstrates fundamental concepts and serves as a baseline
+
+2. **Multi-GPU Training on a Single Machine**
+   - Utilizes PyTorch's DistributedDataParallel (DDP)
+   - Shows how to parallelize training across multiple GPUs on one machine
+
+3. **Multi-Node Training on a Slurm Cluster**
+   - Advanced setup for distributed training across multiple machines
+   - Demonstrates integration with Slurm workload manager
+
+## Key Features
+
+- Detailed setup instructions for each scenario
+- Example scripts with clear explanations
+- Practical tips for efficient distributed training
+- Demonstration on both synthetic data and a realistic recommendation system use case
+
+## Getting Started
+
+Start with the single GPU example and progress through the more complex setups as you become comfortable with the concepts.
+
+## Requirements
+
+- PyTorch (with CUDA support for GPU training)
+- torchrun (for launching distributed jobs)
+- Access to GPU resources (local or cloud-based)
+- Slurm cluster access (for multi-node examples)
+
+
 
 ~ still in progress ~
 
-Based on the excellent PyTorch tutorial, we'll go through PyTorch DistributedDataParallel (DDP) -- which enables data parallel training in PyTorch. Data parallelism is a way to process multiple data batches across multiple devices simultaneously to achieve better performance.
-
-As good as that tutorial was, like most others, it hid the infrastructure set-up which is often a real pain-point for those getting started.
-
-I'll go over **three** methods, including the setup steps:
-
-    1. Single GPU 
-
-    2. Multi GPU
-
-    3. Multi-node on a Slurm Cluster [TO DO]
 
 I'll demo each scenario on fake data, and on a more realistic use case (Recommendation System).
 
 OTHER TO DO:
 * Add Opt to save/load funcs
+* Demo sharding of data for cases where we can't fit the dataset in memory
 
+
+## Examples
 
 1. Single GPU
 
@@ -70,7 +98,7 @@ Next, open the folder where the repo has been written to.
 
 Then open the terminal and run:
 
-```torchrun --standalone --nproc_per_node=4 multigpu_torchrun.py 50 10```
+```torchrun --standalone --nproc_per_node=4 multi_gpu_torchrun.py 50 10```
 
 The ```--nproc_per_node=4``` refers to four GPUs, if I had two, I'd put ```--nproc_per_node=2```.
 
